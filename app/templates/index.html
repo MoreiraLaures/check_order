@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Check Order</title>
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f5f5;
+      color: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 16px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    header p {
+      margin-top: 6px;
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 32px;
+      width: 100%;
+      max-width: 520px;
+    }
+
+    label.upload-label {
+      display: block;
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      padding: 32px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    label.upload-label:hover {
+      border-color: #888;
+      background: #fafafa;
+    }
+
+    label.upload-label .icon {
+      font-size: 2rem;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    label.upload-label span.hint {
+      font-size: 0.82rem;
+      color: #999;
+      margin-top: 4px;
+      display: block;
+    }
+
+    #file-input { display: none; }
+
+    #file-name {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: #555;
+      min-height: 18px;
+      text-align: center;
+    }
+
+    button[type="submit"] {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background: #1a1a1a;
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button[type="submit"]:hover { background: #333; }
+    button[type="submit"]:disabled { background: #aaa; cursor: default; }
+
+    /* resultado */
+    #result { margin-top: 24px; }
+
+    .result-box {
+      border-radius: 8px;
+      padding: 20px 24px;
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+
+    .result-ok {
+      background: #f0faf4;
+      border: 1px solid #a8d5b5;
+      color: #1e5c33;
+    }
+
+    .result-error {
+      background: #fff5f5;
+      border: 1px solid #f5b8b8;
+      color: #7a1a1a;
+    }
+
+    .result-box h2 {
+      font-size: 1rem;
+      margin-bottom: 12px;
+    }
+
+    .result-box .section-title {
+      font-weight: 600;
+      margin-top: 14px;
+      margin-bottom: 4px;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.7;
+    }
+
+    .div-list {
+      list-style: none;
+      margin-top: 6px;
+    }
+
+    .div-list li {
+      padding: 6px 10px;
+      background: rgba(255,255,255,0.5);
+      border-radius: 5px;
+      margin-bottom: 4px;
+      font-family: monospace;
+      font-size: 0.83rem;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 3px;
+      margin-right: 6px;
+      text-transform: uppercase;
+    }
+
+    .tag-absent { background: #ffd6d6; color: #7a1a1a; }
+    .tag-qty    { background: #ffe9cc; color: #7a3d00; }
+
+    .htmx-indicator {
+      display: none;
+      text-align: center;
+      margin-top: 16px;
+      color: #888;
+      font-size: 0.85rem;
+    }
+    .htmx-request .htmx-indicator { display: block; }
+
+    footer {
+      margin-top: 48px;
+      font-size: 0.78rem;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Check Order</h1>
+    <p>Verificação de separação de pedidos</p>
+  </header>
+
+  <div class="card">
+    <form
+      hx-post="/verificar"
+      hx-target="#result"
+      hx-swap="innerHTML"
+      hx-encoding="multipart/form-data"
+      hx-indicator="#loading"
+      id="upload-form"
+    >
+      <label class="upload-label" for="file-input">
+        <span class="icon">📄</span>
+        <strong>Selecione o arquivo XLS</strong>
+        <span class="hint">Formato: <code>260005913.xls</code></span>
+      </label>
+      <input
+        id="file-input"
+        type="file"
+        name="file"
+        accept=".xls,.xlsx"
+        required
+        onchange="document.getElementById('file-name').textContent = this.files[0]?.name ?? ''"
+      />
+      <div id="file-name"></div>
+
+      <button type="submit">Verificar separação</button>
+    </form>
+
+    <div id="loading" class="htmx-indicator">Consultando API...</div>
+    <div id="result"></div>
+  </div>
+
+  <footer>Suno Distribuidora &mdash; uso interno</footer>
+
+</body>
+</html>

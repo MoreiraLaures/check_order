@@ -1,0 +1,25 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# PyInstaller
+*.spec.bak
+__pycache__/
+
+# Virtual environments
+.venv
+
+# Credenciais — todos os .env em qualquer subpasta
+.env
+**/.env
+
+# Claude Code
+.claude/
+
+# Dados locais (não entram no repositório)
+.comparativo/
+response/

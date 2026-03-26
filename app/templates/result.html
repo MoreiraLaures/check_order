@@ -1,0 +1,61 @@
+{% if error %}
+<div class="result-box result-error">
+  <h2>Erro ao processar</h2>
+  <p>{{ error }}</p>
+</div>
+
+{% elif result.is_correct %}
+<div class="result-box result-ok">
+  <h2>✓ Separação correta</h2>
+
+  <div class="section-title">Identificação</div>
+  <p>Pedido <strong>{{ result.order_code }}</strong> &mdash; códigos conferem</p>
+
+  <div class="section-title">Itens</div>
+  <p>{{ result.total_xls }} SKUs verificados &mdash; quantidades OK</p>
+</div>
+
+{% else %}
+<div class="result-box result-error">
+  <h2>✗ Separação incorreta</h2>
+
+  <div class="section-title">Identificação</div>
+  {% if not result.codes_match %}
+  <p>
+    Código no arquivo: <strong>{{ result.filename_code }}</strong> &mdash;
+    Código na célula A1: <strong>{{ result.cell_code }}</strong>
+    <br><small>Os códigos não coincidem.</small>
+  </p>
+  {% else %}
+  <p>Pedido <strong>{{ result.order_code }}</strong> &mdash; códigos OK</p>
+  {% endif %}
+
+  <div class="section-title">Itens</div>
+  <p>
+    XLS: {{ result.total_xls }} SKUs &mdash;
+    API: {{ result.total_api }} SKUs
+    {% if not result.counts_match %}
+    <br><small>Quantidade de SKUs diverge.</small>
+    {% endif %}
+  </p>
+
+  {% if result.divergencias %}
+  <div class="section-title">Divergências ({{ result.divergencias | length }})</div>
+  <ul class="div-list">
+    {% for div in result.divergencias %}
+    <li>
+      {% if div.qty_api is none %}
+        <span class="tag tag-absent">ausente</span>
+      {% else %}
+        <span class="tag tag-qty">qtd</span>
+      {% endif %}
+      SKU {{ div.sku }} &mdash; {{ div.description_xls }}
+      {% if div.qty_api is not none %}
+        &mdash; XLS: <strong>{{ div.qty_xls }}</strong> / API: <strong>{{ div.qty_api }}</strong>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</div>
+{% endif %}
