@@ -1,0 +1,19 @@
+============================================================
+  RELATÓRIO DE COMPARAÇÃO DE SEPARAÇÃO
+  Gerado em: 26/03/2026 18:06:06
+============================================================
+
+[ IDENTIFICAÇÃO ]
+  Código no nome do arquivo : 260005913
+  Código na célula A1       : 260005913
+  Conferência de código     : OK
+
+[ ITENS ]
+  Qtd. SKUs no XLS  : 20
+  Qtd. SKUs na API  : 20
+  Total de SKUs     : OK
+
+------------------------------------------------------------
+  RESULTADO: SEPARAÇÃO CORRETA ✓
+  Todos os SKUs e quantidades conferem com o pedido.
+============================================================
