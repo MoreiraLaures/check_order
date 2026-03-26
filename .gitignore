@@ -17,9 +17,3 @@ __pycache__/
 .env
 **/.env
 
-# Claude Code
-.claude/
-
-# Dados locais (não entram no repositório)
-.comparativo/
-response/
