@@ -1,4 +1,4 @@
-# Python-generated files
+
 __pycache__/
 *.py[oc]
 build/
@@ -10,10 +10,10 @@ wheels/
 *.spec.bak
 __pycache__/
 
-# Virtual environments
+
 .venv
 
-# Credenciais — todos os .env em qualquer subpasta
+
 .env
 **/.env
 
