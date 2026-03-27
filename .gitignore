@@ -10,7 +10,7 @@ wheels/
 *.spec.bak
 __pycache__/
 
-
+exemple/
 .venv
 
 
