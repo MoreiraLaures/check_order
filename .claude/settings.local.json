@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \":*)",
+      "Bash(uv run python -c \":*)",
+      "Bash(~/.local/bin/uv run python -c \":*)",
+      "Bash(where uv:*)",
+      "Read(//c/Users/**)",
+      "Bash(\"/c/Users/Lucas Laures/AppData/Local/Programs/Python/Python313/python.exe\" -c \"import xlrd; print\\(''ok''\\)\")",
+      "Bash(pip install:*)",
+      "Bash(python -c \"import xlrd; print\\(xlrd.__version__\\)\")",
+      "Bash(python -c \"import sys; print\\(sys.path\\)\")",
+      "Bash(find '/c/Users/Lucas Laures' -name uv* -type f)"
+    ]
+  }
+}
