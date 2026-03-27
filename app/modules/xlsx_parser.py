@@ -15,23 +15,57 @@ class XlsParseResult:
 
 # Variantes de cabeçalho conhecidas para cada campo lógico (em minúsculas)
 _SKU_HEADERS: set[str] = {
+    # Com acento
     "cód.produto",
-    "cod.produto",
-    "produto",
+    "cód. produto",
     "cód. produto (mp)",
+    # Sem acento
+    "cod.produto",
+    "cod. produto",
     "cod. produto (mp)",
+    # Genérico
+    "produto",
+    "código",
+    "codigo",
+    "cód",
+    "cod",
+    "sku",
+    "item",
+    "ref",
+    "referência",
+    "referencia",
 }
 _DESC_HEADERS: set[str] = {
+    # Com acento
     "descrição (produto)",
-    "descricao (produto)",
     "descrição (matéria prima)",
+    "descrição",
+    "descrição produto",
+    # Sem acento
+    "descricao (produto)",
     "descricao (materia prima)",
+    "descricao",
+    "descricao produto",
+    # Abreviações
     "descr. produto",
+    "descr.",
+    "desc.",
+    "desc",
+    "nome",
+    "nome produto",
+    "denominação",
+    "denominacao",
 }
 _QTY_HEADERS: set[str] = {
     "quantidade",
     "qtd. apontada",
     "qtd apontada",
+    "qtd.",
+    "qtd",
+    "qtde.",
+    "qtde",
+    "quant.",
+    "quant",
 }
 
 

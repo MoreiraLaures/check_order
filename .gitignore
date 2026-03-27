@@ -16,5 +16,8 @@ wheels/
 build/
 *.spec.bak
 
+# Outputs gerados em runtime
+response/
+
 # Ferramentas
 .claude/
