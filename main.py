@@ -15,8 +15,7 @@ def open_browser():
 
 
 if __name__ == "__main__":
-    # Quando empacotado sem console, sys.stdout/stderr são None.
-    # O formatter do uvicorn chama .isatty() e quebra — redirecionamos para null.
+
     if sys.stdout is None:
         sys.stdout = open(os.devnull, "w")
     if sys.stderr is None:

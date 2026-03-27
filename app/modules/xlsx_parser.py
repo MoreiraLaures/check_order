@@ -13,6 +13,61 @@ class XlsParseResult:
     items: list[dict]  # [{"sku": str, "description": str, "quantity": int}]
 
 
+# Variantes de cabeçalho conhecidas para cada campo lógico (em minúsculas)
+_SKU_HEADERS: set[str] = {
+    "cód.produto",
+    "cod.produto",
+    "produto",
+    "cód. produto (mp)",
+    "cod. produto (mp)",
+}
+_DESC_HEADERS: set[str] = {
+    "descrição (produto)",
+    "descricao (produto)",
+    "descrição (matéria prima)",
+    "descricao (materia prima)",
+    "descr. produto",
+}
+_QTY_HEADERS: set[str] = {
+    "quantidade",
+    "qtd. apontada",
+    "qtd apontada",
+}
+
+
+def _detect_columns(ws, header_row_idx: int) -> tuple[int, int, int]:
+    """
+    Lê a linha de cabeçalho e retorna os índices (sku_col, desc_col, qty_col).
+    Lança ValueError se algum campo não for encontrado.
+    """
+    headers = [
+        str(ws.cell_value(header_row_idx, j)).strip().lower()
+        for j in range(ws.ncols)
+    ]
+
+    sku_col = desc_col = qty_col = None
+    for idx, h in enumerate(headers):
+        if sku_col is None and h in _SKU_HEADERS:
+            sku_col = idx
+        elif desc_col is None and h in _DESC_HEADERS:
+            desc_col = idx
+        elif qty_col is None and h in _QTY_HEADERS:
+            qty_col = idx
+
+    missing = [
+        name
+        for name, val in [("SKU", sku_col), ("Descrição", desc_col), ("Quantidade", qty_col)]
+        if val is None
+    ]
+    if missing:
+        raise ValueError(
+            f"Colunas não encontradas no cabeçalho (linha {header_row_idx + 1}): "
+            f"{', '.join(missing)}. Cabeçalhos lidos: {headers}"
+        )
+
+    return sku_col, desc_col, qty_col  # type: ignore[return-value]
+
+
 def _extract_code_from_cell(text: str) -> str | None:
     """
     Extrai o código numérico do pedido da célula A1.
@@ -75,10 +130,12 @@ def parse_xls(filepath: str) -> XlsParseResult:
     HEADER_ROW = 2  # índice 0-based da linha de cabeçalho
     DATA_START = HEADER_ROW + 1
 
+    sku_col, desc_col, qty_col = _detect_columns(ws, HEADER_ROW)
+
     for row_idx in range(DATA_START, ws.nrows):
-        sku_raw = ws.cell_value(row_idx, 0)
-        desc_raw = ws.cell_value(row_idx, 1)
-        qty_raw = ws.cell_value(row_idx, 2)
+        sku_raw = ws.cell_value(row_idx, sku_col)
+        desc_raw = ws.cell_value(row_idx, desc_col)
+        qty_raw = ws.cell_value(row_idx, qty_col)
 
         # Ignora linhas sem SKU (ex: linha de total)
         if not str(sku_raw).strip():
