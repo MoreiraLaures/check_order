@@ -1,19 +1,20 @@
 
+# Python
 __pycache__/
 *.py[oc]
-build/
-dist/
-wheels/
 *.egg-info
+wheels/
 
-# PyInstaller
-*.spec.bak
-__pycache__/
-
-exemple/
+# Ambiente virtual
 .venv
 
-
+# Variáveis de ambiente (sensível)
 .env
 **/.env
 
+# Build PyInstaller
+build/
+*.spec.bak
+
+# Ferramentas
+.claude/
