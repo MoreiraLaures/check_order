@@ -1,8 +1,10 @@
 import os
 import tempfile
+import threading
+import time
 
 from fastapi import FastAPI, UploadFile, File, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from dotenv import load_dotenv
 
@@ -18,9 +20,30 @@ templates = Jinja2Templates(directory=os.path.join(BUNDLE_DIR, "app", "templates
 
 app = FastAPI(title="Check Order")
 
+# --- Watchdog: encerra o processo quando o browser fechar ---
+_last_ping = time.time()
+
+
+def _watchdog():
+    time.sleep(20)          # grace period para o browser abrir
+    while True:
+        time.sleep(3)
+        if time.time() - _last_ping > 10:
+            os._exit(0)     # encerra o processo inteiro
+
+
+threading.Thread(target=_watchdog, daemon=True).start()
+
 
 def _render(request: Request, template: str, **ctx):
     return templates.TemplateResponse(request, template, ctx)
+
+
+@app.get("/ping")
+async def ping():
+    global _last_ping
+    _last_ping = time.time()
+    return JSONResponse({"ok": True})
 
 
 @app.get("/", response_class=HTMLResponse)

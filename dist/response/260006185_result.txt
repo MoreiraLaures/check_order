@@ -1,0 +1,29 @@
+============================================================
+  RELATÓRIO DE COMPARAÇÃO DE SEPARAÇÃO
+  Gerado em: 27/03/2026 15:15:14
+============================================================
+
+[ IDENTIFICAÇÃO ]
+  Código no nome do arquivo : 260006185
+  Código na célula A1       : 260006185
+  Conferência de código     : OK
+
+[ ITENS ]
+  Qtd. SKUs no XLS  : 8
+  Qtd. SKUs na API  : 8
+  Total de SKUs     : OK
+
+------------------------------------------------------------
+  RESULTADO: SEPARAÇÃO INCORRETA ✗
+
+  Divergências encontradas:
+
+  [QTD ERRADA]     4744  'MINI TRILHO PLANO BAIXO 310MM - SOLAR GROUP'  — XLS: 0  |  API: 62
+  [QTD ERRADA]     4699  'GRAMPO INTERMEDIÁRIO - 30-35MM - SOLAR GROUP'  — XLS: 0  |  API: 46
+  [QTD ERRADA]     6535  '615 WP - MÓDULO CANADIAN - CS6.2-66TB-615 - BIFACIAL N-TYPE'  — XLS: 0  |  API: 27
+  [QTD ERRADA]      106  'PARAFUSO SEXTAVADO 5.5X25MM  AUTOBROCANTE'  — XLS: 0  |  API: 6
+  [QTD ERRADA]     4700  'GRAMPO FINAL - 30-35MM - SOLAR GROUP'  — XLS: 0  |  API: 16
+  [QTD ERRADA]     2545  '10K INVERSOR SOLIS S5-GR1P10K'  — XLS: 0  |  API: 1
+  [QTD ERRADA]       45  'CABO COM PROTEÇAO UV 4 MM² VERMELHO'  — XLS: 0  |  API: 75
+  [QTD ERRADA]       44  'CABO COM PROTEÇAO UV 4 MM² PRETO'  — XLS: 0  |  API: 75
+============================================================
