@@ -102,26 +102,30 @@ def _detect_columns(ws, header_row_idx: int) -> tuple[int, int, int]:
     return sku_col, desc_col, qty_col  # type: ignore[return-value]
 
 
-def _extract_code_from_cell(text: str) -> str | None:
+def _extract_code_from_cell(text: str, filename: str | None = None) -> str | None:
     """
-    Extrai o código numérico do pedido da célula A1.
-    Aceita formatos como:
-      'Apontamento de PA:260005913 - ...'
-      'PA: 260005913'
-      '260005913 - ...'
-    Busca sequências de 6+ dígitos consecutivos para evitar pegar
-    anos, telefones curtos etc. Usa 'PA:' como âncora quando disponível.
+    Extrai o código numérico do pedido.
+    1. Busca após 'PA:' no texto.
+    2. Busca 6+ dígitos no texto.
+    3. Busca 6+ dígitos no início do nome do arquivo (ex: 260005913_sankhya).
     """
-    # Tentativa 1: número imediatamente após 'PA:' (com ou sem espaço)
+    # Tentativa 1: número imediatamente após 'PA:' no texto
     match = re.search(r"PA:\s*(\d+)", text, re.IGNORECASE)
     if match:
         return match.group(1).strip()
 
-    # Tentativa 2: primeiro número com 6+ dígitos na string
+    # Tentativa 2: primeiro número com 6+ dígitos no texto
     match = re.search(r"\b(\d{6,})\b", text)
     if match:
         return match.group(1)
 
+    # Tentativa 3: Extração do nome do arquivo (se fornecido)
+    if filename:
+        # Busca especificamente dígitos no início do nome ou antes de um underscore/hífen
+        match_file = re.search(r"^(\d{6,})", filename)
+        if match_file:
+            return match_file.group(1)
+            
     return None
 
 
